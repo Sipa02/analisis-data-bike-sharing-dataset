@@ -18,14 +18,15 @@ day_df = pd.read_csv('https://raw.githubusercontent.com/Sipa02/analisis-data-bik
 hour_df = pd.read_csv('https://raw.githubusercontent.com/Sipa02/analisis-data-bike-sharing-dataset/main/data/hour.csv')
 
 # Streamlit Title
-st.title('Bike Sharing Dashboard')
+st.title('Bike Sharing Dashboard :sparkles:')
+st.markdown("<br>", unsafe_allow_html=True)
 st.write('Pilih kategori untuk melihat jumlah penyewa sepeda')
 
 # Pilihan kategori
 kategori = st.selectbox("Pilih Kategori", ["Hari", "Jam", "Musim", "Cuaca"])
 
 # Membuat visualisasi sesuai kategori yang dipilih
-fig, ax = plt.subplots(figsize=(10, 5))
+fig, ax = plt.subplots()
 
 if kategori == "Musim":
     season_rentals = day_df.groupby('season')['cnt'].sum()
@@ -44,11 +45,9 @@ elif kategori == "Cuaca":
         4: "Heavy Rain + Thunderstorm, Snow + Fog"
     }
     
-    # Pastikan indeksnya bertipe integer
     weather_rentals = day_df.groupby('weathersit')['cnt'].sum()
-    weather_rentals.index = weather_rentals.index.astype(int)  # Konversi ke integer
-    
-    # Filter indeks yang ada dalam dictionary untuk mencegah error
+    weather_rentals.index = weather_rentals.index.astype(int)
+
     valid_indices = [i for i in weather_rentals.index if i in weather_labels]
 
     bars = ax.bar(valid_indices, weather_rentals.loc[valid_indices].values, color='skyblue')
@@ -56,9 +55,8 @@ elif kategori == "Cuaca":
     ax.set_xlabel("Cuaca")
     ax.set_ylabel("Jumlah Penyewa")
     ax.set_title("Jumlah Penyewa Sepeda Berdasarkan Cuaca")
-    ax.set_xticks([1, 2, 3, 4])  # Tetap pakai angka
+    ax.set_xticks([1, 2, 3, 4])
 
-    # Menambahkan legenda di sisi kanan
     legend_labels = [weather_labels[i] for i in valid_indices]
     ax.legend(bars, legend_labels, title="Kategori Cuaca", loc="upper right")
 
@@ -77,7 +75,28 @@ elif kategori == "Jam":
     ax.set_xlabel("Jam")
     ax.set_ylabel("Jumlah Penyewa")
     ax.set_title("Jumlah Penyewa Sepeda Berdasarkan Jam")
-    ax.set_xticks(range(0, 24, 2))  # Menampilkan setiap 2 jam untuk keterbacaan
+    ax.set_xticks(range(0, 24, 2))
 
-# Menampilkan plot di Streamlit
+# Menampilkan plot utama di Streamlit
+st.pyplot(fig)
+
+# ======================== HEATMAP DI BAWAH ========================
+st.subheader("Pola Peminjaman Sepeda Berdasarkan Hari dan Jam")
+
+# Grouping data berdasarkan hari dan jam
+hourly_rental_pattern = hour_df.groupby(['weekday', 'hr'])['cnt'].sum().reset_index()
+
+# Mengubah nama kolom
+hourly_rental_pattern = hourly_rental_pattern.rename(columns={'weekday': 'Hari', 'hr': 'Jam'})
+
+# Bikin heatmap
+fig, ax = plt.subplots(figsize=(12, 6))
+sns.heatmap(hourly_rental_pattern.pivot(index='Hari', columns='Jam', values='cnt'), 
+            cmap='viridis', annot=False, fmt=".0f", ax=ax)
+
+ax.set_title('Pola Peminjaman Sepeda Berdasarkan Hari dan Jam')
+ax.set_xlabel('Jam')
+ax.set_ylabel('Hari')
+
+# Menampilkan heatmap di Streamlit
 st.pyplot(fig)
