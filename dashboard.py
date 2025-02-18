@@ -51,13 +51,16 @@ elif kategori == "Cuaca":
     # Filter indeks yang ada dalam dictionary untuk mencegah error
     valid_indices = [i for i in weather_rentals.index if i in weather_labels]
 
-    ax.bar(valid_indices, weather_rentals.loc[valid_indices].values, color='skyblue')
+    bars = ax.bar(valid_indices, weather_rentals.loc[valid_indices].values, color='skyblue')
+
     ax.set_xlabel("Cuaca")
     ax.set_ylabel("Jumlah Penyewa")
     ax.set_title("Jumlah Penyewa Sepeda Berdasarkan Cuaca")
-    ax.set_xticks(valid_indices)
-    ax.set_xticklabels([weather_labels[i] for i in valid_indices], rotation=20, ha='right')
+    ax.set_xticks([1, 2, 3, 4])  # Tetap pakai angka
 
+    # Menambahkan legenda di sisi kanan
+    legend_labels = [weather_labels[i] for i in valid_indices]
+    ax.legend(bars, legend_labels, title="Kategori Cuaca", loc="upper right")
 
 elif kategori == "Hari":
     day_rentals = day_df.groupby('weekday')['cnt'].sum()
