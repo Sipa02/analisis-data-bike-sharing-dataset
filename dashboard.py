@@ -20,10 +20,10 @@ hour_df = pd.read_csv('https://raw.githubusercontent.com/Sipa02/analisis-data-bi
 # Streamlit Title
 st.title('Bike Sharing Dashboard :sparkles:')
 st.markdown("<br>", unsafe_allow_html=True)
-st.write('Pilih kategori untuk melihat jumlah penyewa sepeda')
+st.subheader("Jumlah Peminjaman Sepeda Berdasarkan Kategori")
 
 # Pilihan kategori
-kategori = st.selectbox("Pilih Kategori", ["Hari", "Jam", "Musim", "Cuaca"])
+kategori = st.selectbox("Pilih kategori untuk melihat jumlah penyewa sepeda: ", ["Hari", "Jam", "Musim", "Cuaca"])
 
 # Membuat visualisasi sesuai kategori yang dipilih
 fig, ax = plt.subplots()
@@ -33,7 +33,7 @@ if kategori == "Musim":
     ax.bar(season_rentals.index, season_rentals.values, color='skyblue')
     ax.set_xlabel("Musim")
     ax.set_ylabel("Jumlah Penyewa")
-    ax.set_title("Jumlah Penyewa Sepeda Berdasarkan Musim")
+    ax.set_title("Jumlah Peminjaman Sepeda Berdasarkan Musim")
     ax.set_xticks([1, 2, 3, 4])
     ax.set_xticklabels(['Spring', 'Summer', 'Fall', 'Winter'])
 
@@ -79,6 +79,8 @@ elif kategori == "Jam":
 
 # Menampilkan plot utama di Streamlit
 st.pyplot(fig)
+st.markdown("<br>", unsafe_allow_html=True)
+st.markdown("<br>", unsafe_allow_html=True)
 
 # ======================== HEATMAP DI BAWAH ========================
 st.subheader("Pola Peminjaman Sepeda Berdasarkan Hari dan Jam")
