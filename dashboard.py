@@ -25,7 +25,7 @@ st.write('Pilih kategori untuk melihat jumlah penyewa sepeda')
 kategori = st.selectbox("Pilih Kategori", ["Hari", "Jam", "Musim", "Cuaca"])
 
 # Membuat visualisasi sesuai kategori yang dipilih
-fig, ax = plt.subplots(figsize=(8, 5))
+fig, ax = plt.subplots(figsize=(8, 7))
 
 if kategori == "Musim":
     season_rentals = day_df.groupby('season')['cnt'].sum()
