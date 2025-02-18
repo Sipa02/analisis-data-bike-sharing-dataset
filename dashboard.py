@@ -88,11 +88,25 @@ st.markdown("<br>", unsafe_allow_html=True)
 # ======================== HEATMAP DI BAWAH ========================
 st.subheader("Pola Peminjaman Sepeda Berdasarkan Hari dan Jam")
 
+# Mengubah nama hari menjadi singkatan
+hari_map = {
+    0: 'Min',  # Minggu
+    1: 'Sen',  # Senin
+    2: 'Sel',  # Selasa
+    3: 'Rab',  # Rabu
+    4: 'Kam',  # Kamis
+    5: 'Jum',  # Jumat
+    6: 'Sab'   # Sabtu
+}
+
 # Grouping data berdasarkan hari dan jam
 hourly_rental_pattern = hour_df.groupby(['weekday', 'hr'])['cnt'].sum().reset_index()
 
 # Mengubah nama kolom
 hourly_rental_pattern = hourly_rental_pattern.rename(columns={'weekday': 'Hari', 'hr': 'Jam'})
+
+# Mengubah hari menjadi singkatan
+hourly_rental_pattern['Hari'] = hourly_rental_pattern['Hari'].map(hari_map)
 
 # Bikin heatmap
 fig, ax = plt.subplots(figsize=(12, 6))
