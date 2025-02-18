@@ -63,5 +63,5 @@ elif kategori == "Jam":
     ax.set_ylabel("Jumlah Penyewa")
     ax.set_title("Jumlah Penyewa Sepeda Berdasarkan Jam")
     ax.set_xticks(range(0, 24))
-else:
-  st.write("Pilih kategori yang valid")
+    
+st.pyplot(fig)
