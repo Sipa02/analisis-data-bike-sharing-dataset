@@ -43,13 +43,21 @@ elif kategori == "Cuaca":
         3: "Light Snow, Light Rain + Thunderstorm",
         4: "Heavy Rain + Thunderstorm, Snow + Fog"
     }
+    
+    # Pastikan indeksnya bertipe integer
     weather_rentals = day_df.groupby('weathersit')['cnt'].sum()
-    ax.bar(weather_rentals.index, weather_rentals.values, color='skyblue')
+    weather_rentals.index = weather_rentals.index.astype(int)  # Konversi ke integer
+    
+    # Filter indeks yang ada dalam dictionary untuk mencegah error
+    valid_indices = [i for i in weather_rentals.index if i in weather_labels]
+
+    ax.bar(valid_indices, weather_rentals.loc[valid_indices].values, color='skyblue')
     ax.set_xlabel("Cuaca")
     ax.set_ylabel("Jumlah Penyewa")
     ax.set_title("Jumlah Penyewa Sepeda Berdasarkan Cuaca")
-    ax.set_xticks([1, 2, 3, 4])
-    ax.set_xticklabels([weather_labels[i] for i in weather_rentals.index], rotation=20, ha='right')
+    ax.set_xticks(valid_indices)
+    ax.set_xticklabels([weather_labels[i] for i in valid_indices], rotation=20, ha='right')
+
 
 elif kategori == "Hari":
     day_rentals = day_df.groupby('weekday')['cnt'].sum()
