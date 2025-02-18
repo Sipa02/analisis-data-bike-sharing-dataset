@@ -88,7 +88,7 @@ st.markdown("<br>", unsafe_allow_html=True)
 # ======================== HEATMAP DI BAWAH ========================
 st.subheader("Pola Peminjaman Sepeda Berdasarkan Hari dan Jam")
 
-# Mengubah nama hari menjadi singkatan
+# Peta hari
 hari_map = {
     0: 'Min',  # Minggu
     1: 'Sen',  # Senin
@@ -102,20 +102,28 @@ hari_map = {
 # Grouping data berdasarkan hari dan jam
 hourly_rental_pattern = hour_df.groupby(['weekday', 'hr'])['cnt'].sum().reset_index()
 
-# Mengubah nama kolom
+# Ubah nama kolom
 hourly_rental_pattern = hourly_rental_pattern.rename(columns={'weekday': 'Hari', 'hr': 'Jam'})
 
-# Mengubah hari menjadi singkatan
+# Ubah hari menjadi singkatan
 hourly_rental_pattern['Hari'] = hourly_rental_pattern['Hari'].map(hari_map)
 
-# Bikin heatmap
-fig, ax = plt.subplots(figsize=(12, 6))
-sns.heatmap(hourly_rental_pattern.pivot(index='Hari', columns='Jam', values='cnt'), 
-            cmap='viridis', annot=False, fmt=".0f", ax=ax)
+# Atur urutan kategori
+ordered_days = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab']
+hourly_rental_pattern['Hari'] = pd.Categorical(hourly_rental_pattern['Hari'], categories=ordered_days, ordered=True)
 
-# ax.set_title('Pola Peminjaman Sepeda Berdasarkan Hari dan Jam')
+# Urutkan data berdasarkan hari (opsional, tapi membantu memastikan urutan yang benar)
+hourly_rental_pattern = hourly_rental_pattern.sort_values('Hari')
+
+# Buat pivot table
+pivot_table = hourly_rental_pattern.pivot(index='Hari', columns='Jam', values='cnt')
+
+# Buat heatmap
+fig, ax = plt.subplots(figsize=(12, 6))
+sns.heatmap(pivot_table, cmap='viridis', annot=False, fmt=".0f", ax=ax)
+
 ax.set_xlabel('Jam')
 ax.set_ylabel('Hari')
 
-# Menampilkan heatmap di Streamlit
+# Tampilkan heatmap di Streamlit
 st.pyplot(fig)
