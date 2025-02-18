@@ -12,7 +12,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st
-import plotly.express as px
+# import plotly.express as px
 
 day_df = pd.read_csv('https://raw.githubusercontent.com/Sipa02/analisis-data-bike-sharing-dataset/main/data/day.csv')
 
